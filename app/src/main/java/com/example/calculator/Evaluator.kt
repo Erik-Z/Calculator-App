@@ -70,5 +70,31 @@ public class Evaluator {
             }
             return output
         }
+
+        fun evaluateRPN(rpn: List<String>): Double{
+            val stack = Stack<Double>()
+
+            for (token in rpn) {
+                when {
+                    token.isDigitsOrDot() -> stack.push(token.toDouble())
+                    else -> {
+                        val b = stack.pop()
+                        val a = stack.pop()
+                        stack.push(applyOp(a, b, token[0]))
+                    }
+                }
+            }
+
+            return stack.pop()
+        }
+
+        private fun String.isDigitsOrDot(): Boolean {
+            return all { it.isDigit() || it == '.' }
+        }
+
+        fun evaluateExpression(expression: String): Double {
+            val rpn = infixToRPN(expression)
+            return evaluateRPN(rpn)
+        }
     }
 }

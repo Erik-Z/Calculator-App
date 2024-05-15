@@ -35,14 +35,6 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf("0")
             }
 
-            val num2 = remember {
-                mutableStateOf("0")
-            }
-
-            val isNum2 = remember {
-                mutableStateOf(false)
-            }
-
             Column {
                 val screenHeight = LocalConfiguration.current.screenHeightDp.dp
                 val paddingPercentage = 0.05f
@@ -109,8 +101,7 @@ class MainActivity : ComponentActivity() {
 
                     Button(
                         onClick = {
-                            println("Clicked")
-                            println(Evaluator.infixToRPN(result.value))
+                            result.value = Evaluator.evaluateExpression(result.value).toString()
                         },
                         modifier = Modifier.weight(1f)
                     ) {
