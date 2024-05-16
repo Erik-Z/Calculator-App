@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -81,43 +80,43 @@ fun CalculatorUI(
             ) {
                 CalculatorButton(
                     text = "AC",
-                    color = Pink80,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.clear()
                         },
+                    color = Pink80,
                 )
                 CalculatorButton(
                     text = "()",
-                    color = PurpleGrey40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
 
                         },
+                    color = PurpleGrey40,
                 )
                 CalculatorButton(
                     text = "%",
-                    color = PurpleGrey40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
 
                         },
+                    color = PurpleGrey40,
                 )
                 CalculatorButton(
                     text = "/",
-                    color = PurpleGrey40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("/")
                         },
+                    color = PurpleGrey40,
                 )
             }
 
@@ -129,43 +128,43 @@ fun CalculatorUI(
             ) {
                 CalculatorButton(
                     text = "7",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("7")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "8",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("8")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "9",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("9")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "*",
-                    color = PurpleGrey40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("*")
                         },
+                    color = PurpleGrey40,
                 )
             }
 
@@ -177,43 +176,43 @@ fun CalculatorUI(
             ) {
                 CalculatorButton(
                     text = "4",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("4")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "5",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("5")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "6",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("6")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "-",
-                    color = PurpleGrey40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("-")
                         },
+                    color = PurpleGrey40,
                 )
             }
 
@@ -225,43 +224,43 @@ fun CalculatorUI(
             ) {
                 CalculatorButton(
                     text = "1",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("1")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "2",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("2")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "3",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("3")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "+",
-                    color = PurpleGrey40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("+")
                         },
+                    color = PurpleGrey40,
                 )
             }
 
@@ -273,43 +272,43 @@ fun CalculatorUI(
             ) {
                 CalculatorButton(
                     text = "0",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append("0")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = ".",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.append(".")
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "⌫",
-                    color = Purple40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.delete()
                         },
+                    color = Purple40,
                 )
                 CalculatorButton(
                     text = "=",
-                    color = Pink40,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
                             viewModel.evaluate()
                         },
+                    color = Pink40,
                 )
             }
         }
@@ -317,10 +316,10 @@ fun CalculatorUI(
 }
 
 @Composable
-fun RowScope.CalculatorButton (
+fun CalculatorButton (
     text: String,
-    color: Color = Color.White,
     modifier: Modifier = Modifier,
+    color: Color = Color.White,
     textStyle: TextStyle = TextStyle(),
 ){
     Box(
