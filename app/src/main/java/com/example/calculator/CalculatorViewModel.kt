@@ -1,7 +1,7 @@
 package com.example.calculator
 
 import androidx.compose.runtime.mutableStateOf
-import kotlin.math.exp
+import kotlin.math.pow
 
 class CalculatorViewModel {
     val expression = mutableStateOf("")
@@ -13,12 +13,16 @@ class CalculatorViewModel {
         expression.value = expression.value.dropLast(1)
     }
 
+    private fun roundToDecimalPlaces(value: Double, decimalPlaces: Int): Double {
+        val factor = 10.0.pow(decimalPlaces)
+        return Math.round(value * factor) / factor
+    }
     fun evaluate() {
-        expression.value = Evaluator.evaluateExpression(expression.value).toString()
+        expression.value = roundToDecimalPlaces(Evaluator.evaluateExpression(expression.value), 5).toString()
     }
 
     fun append(char: String){
-        if (char in "0123456789") {
+        if (char in "0123456789eπ") {
             expression.value += char
         }
         else if (char in "-") {

@@ -25,6 +25,7 @@ public class Evaluator {
             }
         }
 
+        // TODO: Handle ePI
         fun infixToRPN(expression: String): List<String> {
             val stack = Stack<Char>()
             val output = mutableListOf<String>()
@@ -33,11 +34,20 @@ public class Evaluator {
                 when {
                     expression[i].isDigit() -> {
                         val num = StringBuilder()
+                        var numLength = 1
                         while(i < expression.length && (expression[i].isDigit() || expression[i] == '.')) {
                             num.append(expression[i])
                             i++
+                            numLength++
                         }
-                        output.add(num.toString())
+                        // handle previous token is e or π
+                        val isPreviousConstant = i > numLength - 1 && expression[i - numLength] in listOf('e', 'π')
+                        if (isPreviousConstant) {
+                            output.add(num.toString())
+                            output.add("*")
+                        } else {
+                            output.add(num.toString())
+                        }
                     }
 
                     expression[i] == '(' -> {
@@ -62,6 +72,17 @@ public class Evaluator {
                         stack.push(expression[i])
                         i++
                     }
+
+                    expression[i] in listOf('e', 'π') -> {
+                        val isPreviousDigit = i > 0 && expression[i - 1].isDigit()
+                        if (isPreviousDigit) {
+                            output.add(expression[i].toString())
+                            output.add("*")
+                        } else {
+                            output.add(expression[i].toString())
+                        }
+                        i++
+                    }
                     else -> i++
                 }
             }
@@ -72,11 +93,22 @@ public class Evaluator {
         }
 
         fun evaluateRPN(rpn: List<String>): Double{
-            val stack = Stack<Double>()
+            if (rpn.size == 1) {
+                val token = rpn[0]
+                return when {
+                    token.isDigitsOrDot() -> token.toDouble()
+                    token == "e" -> Math.E
+                    token == "π" -> Math.PI
+                    else -> throw IllegalArgumentException("Invalid single token: $token")
+                }
+            }
 
+            val stack = Stack<Double>()
             for (token in rpn) {
                 when {
                     token.isDigitsOrDot() -> stack.push(token.toDouble())
+                    token == "e" -> stack.push(Math.E)
+                    token == "π" -> stack.push(Math.PI)
                     else -> {
                         val b = stack.pop()
                         val a = stack.pop()

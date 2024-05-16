@@ -71,7 +71,53 @@ fun CalculatorUI(
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
             )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+            ) {
+                CalculatorButton(
+                    text = "π",
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .weight(1f)
+                        .clickable {
+                            viewModel.append("π")
+                        },
+                    color = Black,
+                )
+                CalculatorButton(
+                    text = "e",
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .weight(1f)
+                        .clickable {
+                            viewModel.append("e")
+                        },
+                    color = Black,
+                )
+                CalculatorButton(
+                    text = "",
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .weight(1f)
+                        .clickable {
 
+                        },
+                    color = Black,
+                )
+                CalculatorButton(
+                    text = "",
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .weight(1f)
+                        .clickable {
+
+                        },
+                    color = Black,
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
