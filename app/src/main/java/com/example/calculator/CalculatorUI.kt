@@ -140,7 +140,7 @@ fun CalculatorUI(
                         .aspectRatio(1f)
                         .weight(1f)
                         .clickable {
-
+                            viewModel.appendParentheses()
                         },
                     color = PurpleGrey40,
                 )

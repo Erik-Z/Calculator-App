@@ -26,6 +26,7 @@ public class Evaluator {
         }
 
         // TODO: Handle ePI
+        // TODO: Handle Parentheses multiplication 9(5)
         fun infixToRPN(expression: String): List<String> {
             val stack = Stack<Char>()
             val output = mutableListOf<String>()
