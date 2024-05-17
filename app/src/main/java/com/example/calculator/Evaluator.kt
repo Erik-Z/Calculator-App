@@ -83,7 +83,7 @@ public class Evaluator {
                         }
                         i++
                     }
-                    else -> i++
+                    else -> throw IllegalArgumentException("Illegal Character")
                 }
             }
             while (stack.isNotEmpty()) {

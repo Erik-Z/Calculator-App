@@ -18,7 +18,12 @@ class CalculatorViewModel {
         return Math.round(value * factor) / factor
     }
     fun evaluate() {
-        expression.value = roundToDecimalPlaces(Evaluator.evaluateExpression(expression.value), 5).toString()
+        try {
+            expression.value =
+                roundToDecimalPlaces(Evaluator.evaluateExpression(expression.value), 5).toString()
+        } catch (e: Exception) {
+            expression.value = "INVALID"
+        }
     }
 
     fun append(char: String){
