@@ -3,7 +3,7 @@ package com.example.calculator
 import java.util.Stack
 import kotlin.math.pow
 
-public class Evaluator {
+class Evaluator {
     companion object {
         private fun precedence (op: Char): Int {
             return when(op) {
