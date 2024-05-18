@@ -1,4 +1,4 @@
-package com.example.calculator
+package com.erikzhou.calculator
 
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf

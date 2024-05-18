@@ -1,4 +1,4 @@
-package com.example.calculator
+package com.erikzhou.calculator
 
 import java.util.Stack
 import kotlin.math.pow
