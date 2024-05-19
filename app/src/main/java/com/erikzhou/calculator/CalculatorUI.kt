@@ -21,9 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.LightGray
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
-import androidx.core.view.WindowCompat
 import com.erikzhou.calculator.ui.theme.*
 @Composable
 fun CalculatorUI(
@@ -69,7 +65,7 @@ fun CalculatorUI(
             }
 
             Divider(
-                color = LightGray,
+                color = Color.LightGray,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
@@ -88,7 +84,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("π")
                         },
-                    color = Black,
+                    color = MaterialTheme.colorScheme.background,
                 )
                 CalculatorButton(
                     text = "e",
@@ -98,7 +94,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("e")
                         },
-                    color = Black,
+                    color = MaterialTheme.colorScheme.background,
                 )
                 CalculatorButton(
                     text = "",
@@ -108,7 +104,7 @@ fun CalculatorUI(
                         .clickable {
 
                         },
-                    color = Black,
+                    color = MaterialTheme.colorScheme.background,
                 )
                 CalculatorButton(
                     text = "",
@@ -118,7 +114,7 @@ fun CalculatorUI(
                         .clickable {
 
                         },
-                    color = Black,
+                    color = MaterialTheme.colorScheme.background,
                 )
             }
             Row(

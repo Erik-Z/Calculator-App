@@ -24,7 +24,7 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    background = Color.Blue, // Ensure this is blue
+    background = Color.Black, // Ensure this is blue
     onBackground = Color.White // Optionally set onBackground color for contrast
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
