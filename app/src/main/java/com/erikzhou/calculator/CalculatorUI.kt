@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
@@ -33,11 +34,10 @@ fun CalculatorUI(
 ) {
     val expression = viewModel.expression
     val buttonSpacing = 8.dp
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Black)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
@@ -132,7 +132,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.clear()
                         },
-                    color = Pink80,
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
                 CalculatorButton(
                     text = "()",
@@ -142,7 +142,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.appendParentheses()
                         },
-                    color = PurpleGrey40,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
                 CalculatorButton(
                     text = "%",
@@ -152,7 +152,7 @@ fun CalculatorUI(
                         .clickable {
 
                         },
-                    color = PurpleGrey40,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
                 CalculatorButton(
                     text = "/",
@@ -162,7 +162,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("/")
                         },
-                    color = PurpleGrey40,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
             }
 
@@ -180,7 +180,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("7")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "8",
@@ -190,7 +190,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("8")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "9",
@@ -200,7 +200,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("9")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "*",
@@ -210,7 +210,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("*")
                         },
-                    color = PurpleGrey40,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
             }
 
@@ -228,7 +228,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("4")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "5",
@@ -238,7 +238,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("5")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "6",
@@ -248,7 +248,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("6")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "-",
@@ -258,7 +258,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("-")
                         },
-                    color = PurpleGrey40,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
             }
 
@@ -276,7 +276,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("1")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "2",
@@ -286,7 +286,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("2")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "3",
@@ -296,7 +296,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("3")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "+",
@@ -306,7 +306,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("+")
                         },
-                    color = PurpleGrey40,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
             }
 
@@ -324,7 +324,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append("0")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = ".",
@@ -334,7 +334,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.append(".")
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "⌫",
@@ -344,7 +344,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.delete()
                         },
-                    color = Purple40,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 CalculatorButton(
                     text = "=",
@@ -354,7 +354,7 @@ fun CalculatorUI(
                         .clickable {
                             viewModel.evaluate()
                         },
-                    color = Pink40,
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
             }
         }
@@ -367,6 +367,7 @@ fun CalculatorButton (
     modifier: Modifier = Modifier,
     color: Color = Color.White,
     textStyle: TextStyle = TextStyle(),
+    textColor: Color = MaterialTheme.colorScheme.onPrimary
 ){
     Box(
         contentAlignment = Alignment.Center,
@@ -379,7 +380,7 @@ fun CalculatorButton (
             text = text,
             style = textStyle,
             fontSize = 36.sp,
-            color = Purple80
+            color = textColor
         )
     }
 }
