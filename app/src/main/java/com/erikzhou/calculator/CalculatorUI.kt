@@ -23,10 +23,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.core.view.WindowCompat
 import com.erikzhou.calculator.ui.theme.*
 @Composable
 fun CalculatorUI(
@@ -34,6 +39,8 @@ fun CalculatorUI(
 ) {
     val expression = viewModel.expression
     val buttonSpacing = 8.dp
+
+    val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -42,7 +49,8 @@ fun CalculatorUI(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter),
+                .align(Alignment.BottomCenter)
+                .padding(bottom = bottomPadding),
             verticalArrangement = Arrangement.spacedBy(buttonSpacing),
         ) {
             LazyRow(
@@ -51,16 +59,11 @@ fun CalculatorUI(
                 reverseLayout = true
             ) {
                 item {
-                    Text(
-                        text = expression.value,
-                        textAlign = TextAlign.End,
+                    ScaledText(
+                        expression = expression.value,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 32.dp, horizontal = 8.dp),
-                        fontWeight = FontWeight.Light,
-                        fontSize = 80.sp,
-                        color = Color.White,
-                        maxLines = 1
+                            .padding(vertical = 32.dp, horizontal = 8.dp)
                     )
                 }
             }
@@ -383,4 +386,32 @@ fun CalculatorButton (
             color = textColor
         )
     }
+}
+
+@Composable
+fun ScaledText(expression: String, modifier: Modifier = Modifier) {
+    val maxFontSize = 80
+    val minFontSize = 40
+    val thresholdLength = 8
+    val length = expression.length
+
+    val fontSize = when {
+        length <= thresholdLength -> maxFontSize
+        else -> {
+            val scaleFactor = maxFontSize / thresholdLength
+            (maxFontSize - (length - thresholdLength) * scaleFactor).coerceAtLeast(minFontSize)
+        }
+    }
+
+    Text(
+        text = expression,
+        textAlign = TextAlign.End,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 32.dp, horizontal = 8.dp),
+        fontWeight = FontWeight.Light,
+        fontSize = fontSize.sp,
+        color = MaterialTheme.colorScheme.onBackground,
+        maxLines = 1
+    )
 }
