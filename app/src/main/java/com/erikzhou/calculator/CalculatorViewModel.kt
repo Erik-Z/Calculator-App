@@ -24,10 +24,20 @@ class CalculatorViewModel {
         val factor = 10.0.pow(decimalPlaces)
         return Math.round(value * factor) / factor
     }
+
+    private fun formatRoundedValue(value: Double, decimalPlaces: Int): String {
+        val roundedValue = roundToDecimalPlaces(value, decimalPlaces)
+        return if (roundedValue % 1.0 == 0.0) {
+            roundedValue.toInt().toString() // Convert to Int and then to String if there's no fractional part
+        } else {
+            roundedValue.toString() // Otherwise, return the double as a string
+        }
+    }
+
     fun evaluate() {
         try {
-            expression.value =
-                roundToDecimalPlaces(Evaluator.evaluateExpression(expression.value), 5).toString()
+            val formattedValue = formatRoundedValue(Evaluator.evaluateExpression(expression.value), 5)
+            expression.value = formattedValue
             numOfLeftParentheses.intValue = 0
         } catch (e: Exception) {
             expression.value = "INVALID"
