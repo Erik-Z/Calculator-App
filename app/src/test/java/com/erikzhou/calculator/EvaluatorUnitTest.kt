@@ -58,4 +58,12 @@ class EvaluatorUnitTest {
         assertEquals(Evaluator.evaluateExpression("π29"), Math.PI * 29, 0.000001)
         assertEquals(Evaluator.evaluateExpression("29π"), Math.PI * 29, 0.000001)
     }
+
+    @Test
+    fun evaluate_constant_next_to_constant_isCorrect() {
+        assertEquals(Evaluator.evaluateExpression("ππ"), Math.PI * Math.PI, 0.000001)
+        assertEquals(Evaluator.evaluateExpression("ee"), Math.E * Math.E, 0.000001)
+        assertEquals(Evaluator.evaluateExpression("eπ"), Math.E * Math.PI, 0.000001)
+        assertEquals(Evaluator.evaluateExpression("πe"), Math.E * Math.PI, 0.000001)
+    }
 }

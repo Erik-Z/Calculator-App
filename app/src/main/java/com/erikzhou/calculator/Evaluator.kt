@@ -75,7 +75,8 @@ class Evaluator {
                     }
 
                     expression[i] in listOf('e', 'π') -> {
-                        val isPreviousDigit = i > 0 && expression[i - 1].isDigit()
+                        val isPreviousDigit = i > 0 && (expression[i - 1].isDigit() ||
+                                expression[i - 1] in listOf('e', 'π'))
                         if (isPreviousDigit) {
                             output.add(expression[i].toString())
                             output.add("*")
