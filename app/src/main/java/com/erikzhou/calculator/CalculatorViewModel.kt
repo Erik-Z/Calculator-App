@@ -56,6 +56,7 @@ class CalculatorViewModel {
                     expression.value = expression.value.dropLast(1)
                 }
             }
+            expression.value += char
         }
         else if(char in "+*/") {
             if (expression.value.isNotEmpty()) {
