@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.size
 import com.erikzhou.calculator.ui.theme.*
 @Composable
 fun CalculatorUI(
@@ -37,11 +39,12 @@ fun CalculatorUI(
     val buttonSpacing = 8.dp
 
     val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        val isTablet = maxWidth >= 600.dp
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -59,7 +62,8 @@ fun CalculatorUI(
                         expression = expression.value,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 32.dp, horizontal = 8.dp)
+                            .padding(vertical = 8.dp, horizontal = 4.dp),
+                        thresholdLength = if (isTablet) 10 else 7
                     )
                 }
             }
@@ -68,293 +72,72 @@ fun CalculatorUI(
                 color = Color.LightGray,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                    .padding(8.dp)
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
-            ) {
-                CalculatorButton(
-                    text = "π",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("π")
-                        },
-                    color = MaterialTheme.colorScheme.background,
-                )
-                CalculatorButton(
-                    text = "e",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("e")
-                        },
-                    color = MaterialTheme.colorScheme.background,
-                )
-                CalculatorButton(
-                    text = "",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
 
-                        },
-                    color = MaterialTheme.colorScheme.background,
-                )
-                CalculatorButton(
-                    text = "",
+            for (row in listOf(
+                listOf("π", "e", "", ""),
+                listOf("AC", "()", "%", "/"),
+                listOf("7", "8", "9", "*"),
+                listOf("4", "5", "6", "-"),
+                listOf("1", "2", "3", "+"),
+                listOf("0", ".", "⌫", "=")
+            )) {
+                Row(
                     modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-
-                        },
-                    color = MaterialTheme.colorScheme.background,
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
-            ) {
-                CalculatorButton(
-                    text = "AC",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.clear()
-                        },
-                    color = MaterialTheme.colorScheme.tertiary,
-                )
-                CalculatorButton(
-                    text = "()",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.appendParentheses()
-                        },
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-                CalculatorButton(
-                    text = "%",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-
-                        },
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-                CalculatorButton(
-                    text = "/",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("/")
-                        },
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
-            ) {
-                CalculatorButton(
-                    text = "7",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("7")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "8",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("8")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "9",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("9")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "*",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("*")
-                        },
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
-            ) {
-                CalculatorButton(
-                    text = "4",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("4")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "5",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("5")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "6",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("6")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "-",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("-")
-                        },
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
-            ) {
-                CalculatorButton(
-                    text = "1",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("1")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "2",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("2")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "3",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("3")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "+",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("+")
-                        },
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
-            ) {
-                CalculatorButton(
-                    text = "0",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append("0")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = ".",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.append(".")
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "⌫",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.delete()
-                        },
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                CalculatorButton(
-                    text = "=",
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .weight(1f)
-                        .clickable {
-                            viewModel.evaluate()
-                        },
-                    color = MaterialTheme.colorScheme.tertiary,
-                )
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+                ) {
+                    for (button in row) {
+                        CalculatorButton(
+                            text = button,
+                            modifier = Modifier
+                                .aspectRatio(if (isTablet) 1.5f else 1f, matchHeightConstraintsFirst = true)
+                                .weight(1f)
+                                .clickable {
+                                    when (button) {
+                                        "π" -> viewModel.append("π")
+                                        "e" -> viewModel.append("e")
+                                        "AC" -> viewModel.clear()
+                                        "()" -> viewModel.appendParentheses()
+                                        "%" -> {} // Add functionality
+                                        "/" -> viewModel.append("/")
+                                        "7" -> viewModel.append("7")
+                                        "8" -> viewModel.append("8")
+                                        "9" -> viewModel.append("9")
+                                        "*" -> viewModel.append("*")
+                                        "4" -> viewModel.append("4")
+                                        "5" -> viewModel.append("5")
+                                        "6" -> viewModel.append("6")
+                                        "-" -> viewModel.append("-")
+                                        "1" -> viewModel.append("1")
+                                        "2" -> viewModel.append("2")
+                                        "3" -> viewModel.append("3")
+                                        "+" -> viewModel.append("+")
+                                        "0" -> viewModel.append("0")
+                                        "." -> viewModel.append(".")
+                                        "⌫" -> viewModel.delete()
+                                        "=" -> viewModel.evaluate()
+                                    }
+                                },
+                            color = when (button) {
+                                "AC" -> MaterialTheme.colorScheme.tertiary
+                                "()" -> MaterialTheme.colorScheme.secondary
+                                "%" -> MaterialTheme.colorScheme.secondary
+                                "/" -> MaterialTheme.colorScheme.secondary
+                                "*" -> MaterialTheme.colorScheme.secondary
+                                "-" -> MaterialTheme.colorScheme.secondary
+                                "+" -> MaterialTheme.colorScheme.secondary
+                                "=" -> MaterialTheme.colorScheme.tertiary
+                                "π" -> MaterialTheme.colorScheme.background
+                                "e" -> MaterialTheme.colorScheme.background
+                                "" -> MaterialTheme.colorScheme.background
+                                else -> MaterialTheme.colorScheme.primary
+                            }
+                        )
+                    }
+                }
             }
         }
     }
@@ -385,10 +168,9 @@ fun CalculatorButton (
 }
 
 @Composable
-fun ScaledText(expression: String, modifier: Modifier = Modifier) {
+fun ScaledText(expression: String, modifier: Modifier = Modifier, thresholdLength: Int = 7) {
     val maxFontSize = 80
     val minFontSize = 40
-    val thresholdLength = 8
     val length = expression.length
 
     val fontSize = when {
@@ -404,7 +186,7 @@ fun ScaledText(expression: String, modifier: Modifier = Modifier) {
         textAlign = TextAlign.End,
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 32.dp, horizontal = 8.dp),
+            .padding(vertical = 8.dp, horizontal = 4.dp),
         fontWeight = FontWeight.Light,
         fontSize = fontSize.sp,
         color = MaterialTheme.colorScheme.onBackground,
