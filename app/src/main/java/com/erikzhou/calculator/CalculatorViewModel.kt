@@ -9,11 +9,13 @@ class CalculatorViewModel {
     var numOfLeftParentheses = mutableIntStateOf(0)
     fun clear() {
         expression.value = ""
+        numOfLeftParentheses.intValue = 0
     }
 
     fun delete() {
-        if (expression.value.last() == ')'){
-           numOfLeftParentheses.intValue += 1
+        if (expression.value.isEmpty()) return
+        if (expression.value.last() == ')') {
+            numOfLeftParentheses.intValue += 1
         } else if (expression.value.last() == '(') {
             numOfLeftParentheses.intValue -= 1
         }
@@ -67,6 +69,16 @@ class CalculatorViewModel {
                 }
             }
             expression.value += char
+        }
+        else if(char == "%"){
+            if (expression.value.isEmpty()) return
+
+            val lastChar = expression.value.last()
+            if (lastChar in "+-*/") {
+                return
+            } else {
+                expression.value += "%"
+            }
         }
         else if(char == ".") {
             if (expression.value.isNotEmpty()) {

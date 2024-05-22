@@ -66,4 +66,11 @@ class EvaluatorUnitTest {
         assertEquals(Evaluator.evaluateExpression("eπ"), Math.E * Math.PI, 0.000001)
         assertEquals(Evaluator.evaluateExpression("πe"), Math.E * Math.PI, 0.000001)
     }
+
+    @Test
+    fun evaluate_percent_sign_isCorrect() {
+        assertEquals(Evaluator.evaluateExpression("9%"), 9 * 0.01, 0.000001)
+        assertEquals(Evaluator.evaluateExpression("%9"), 9 * 0.01, 0.000001)
+        assertEquals(Evaluator.evaluateExpression("9%9"), 9 * 0.01 * 9, 0.000001)
+    }
 }

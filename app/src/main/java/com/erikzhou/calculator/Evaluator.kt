@@ -42,7 +42,7 @@ class Evaluator {
                             numLength++
                         }
                         // handle previous token is e or π
-                        val isPreviousConstant = i > numLength - 1 && expression[i - numLength] in listOf('e', 'π')
+                        val isPreviousConstant = i > numLength - 1 && expression[i - numLength] in listOf('e', 'π', '%')
                         if (isPreviousConstant) {
                             output.add(num.toString())
                             output.add("*")
@@ -74,9 +74,9 @@ class Evaluator {
                         i++
                     }
 
-                    expression[i] in listOf('e', 'π') -> {
+                    expression[i] in listOf('e', 'π', '%') -> {
                         val isPreviousDigit = i > 0 && (expression[i - 1].isDigit() ||
-                                expression[i - 1] in listOf('e', 'π'))
+                                expression[i - 1] in listOf('e', 'π', '%'))
                         if (isPreviousDigit) {
                             output.add(expression[i].toString())
                             output.add("*")
@@ -101,6 +101,7 @@ class Evaluator {
                     token.isDigitsOrDot() -> token.toDouble()
                     token == "e" -> Math.E
                     token == "π" -> Math.PI
+                    token == "%" -> 0.01
                     else -> throw IllegalArgumentException("Invalid single token: $token")
                 }
             }
@@ -111,6 +112,7 @@ class Evaluator {
                     token.isDigitsOrDot() -> stack.push(token.toDouble())
                     token == "e" -> stack.push(Math.E)
                     token == "π" -> stack.push(Math.PI)
+                    token == "%" -> stack.push(0.01)
                     else -> {
                         val b = stack.pop()
                         val a = stack.pop()

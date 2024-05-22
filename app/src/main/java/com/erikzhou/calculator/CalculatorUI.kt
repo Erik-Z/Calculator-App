@@ -101,7 +101,7 @@ fun CalculatorUI(
                                         "e" -> viewModel.append("e")
                                         "AC" -> viewModel.clear()
                                         "()" -> viewModel.appendParentheses()
-                                        "%" -> {} // Add functionality
+                                        "%" -> viewModel.append("%")
                                         "/" -> viewModel.append("/")
                                         "7" -> viewModel.append("7")
                                         "8" -> viewModel.append("8")
