@@ -41,14 +41,16 @@ class Evaluator {
                             i++
                             numLength++
                         }
+
                         // handle previous token is e or π
-                        val isPreviousConstant = i > numLength - 1 && expression[i - numLength] in listOf('e', 'π', '%')
+                        val isPreviousConstant = i > numLength - 1 && expression[i - numLength] in listOf('e', 'π', '%', ')')
                         if (isPreviousConstant) {
                             output.add(num.toString())
                             output.add("*")
                         } else {
                             output.add(num.toString())
                         }
+
                     }
 
                     expression[i] == '(' -> {
