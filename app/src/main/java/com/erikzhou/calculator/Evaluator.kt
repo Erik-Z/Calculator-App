@@ -42,18 +42,24 @@ class Evaluator {
                             numLength++
                         }
 
-                        // handle previous token is e or π
-                        val isPreviousConstant = i > numLength - 1 && expression[i - numLength] in listOf('e', 'π', '%', ')')
+                        //Handle if previous token was a constant
+                        val isPreviousConstant = i > numLength - 1 && expression[i - numLength] in listOf('e', 'π', '%')
                         if (isPreviousConstant) {
                             output.add(num.toString())
                             output.add("*")
                         } else {
                             output.add(num.toString())
                         }
-
                     }
 
                     expression[i] == '(' -> {
+                        val isPreviousDigitOrConstant = i > 0 && (expression[i - 1].isDigit() || expression[i - 1] in listOf('e', 'π', '%', ')'))
+                        if (isPreviousDigitOrConstant) {
+                            while (stack.isNotEmpty() && precedence(stack.peek()) >= precedence('*')) {
+                                output.add(stack.pop().toString())
+                            }
+                            stack.push('*')
+                        }
                         stack.push(expression[i])
                         i++
                     }
@@ -64,6 +70,14 @@ class Evaluator {
                         }
                         if (stack.isNotEmpty() && stack.peek() == '(') {
                             stack.pop()
+                        }
+                        // Check for implicit multiplication after ')'
+                        val isNextDigitOrConstant = i < expression.length - 1 && (expression[i + 1].isDigit() || expression[i + 1] == '(' || expression[i + 1] in listOf('e', 'π', '%'))
+                        if (isNextDigitOrConstant) {
+                            while (stack.isNotEmpty() && precedence(stack.peek()) >= precedence('*')) {
+                                output.add(stack.pop().toString())
+                            }
+                            stack.push('*')
                         }
                         i++
                     }
@@ -77,9 +91,9 @@ class Evaluator {
                     }
 
                     expression[i] in listOf('e', 'π', '%') -> {
-                        val isPreviousDigit = i > 0 && (expression[i - 1].isDigit() ||
-                                expression[i - 1] in listOf('e', 'π', '%'))
-                        if (isPreviousDigit) {
+                        //Handle if previous token was a constant
+                        val isPreviousConstant = i > 0 && (expression[i - 1] in listOf('e', 'π', '%') || expression[i-1].isDigit())
+                        if (isPreviousConstant) {
                             output.add(expression[i].toString())
                             output.add("*")
                         } else {
@@ -87,6 +101,7 @@ class Evaluator {
                         }
                         i++
                     }
+
                     else -> throw IllegalArgumentException("Illegal Character")
                 }
             }
