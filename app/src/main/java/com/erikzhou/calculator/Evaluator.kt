@@ -72,7 +72,7 @@ class Evaluator {
                             stack.pop()
                         }
                         // Check for implicit multiplication after ')'
-                        val isNextDigitOrConstant = i < expression.length - 1 && (expression[i + 1].isDigit() || expression[i + 1] == '(' || expression[i + 1] in listOf('e', 'π', '%'))
+                        val isNextDigitOrConstant = i < expression.length - 1 && (expression[i + 1].isDigit()  || expression[i + 1] in listOf('e', 'π', '%'))
                         if (isNextDigitOrConstant) {
                             while (stack.isNotEmpty() && precedence(stack.peek()) >= precedence('*')) {
                                 output.add(stack.pop().toString())

@@ -82,4 +82,13 @@ class EvaluatorUnitTest {
         assertEquals(Evaluator.evaluateExpression("9(e)"), (9 * Math.E), 0.000001)
         assertEquals(Evaluator.evaluateExpression("(e)9"), (9 * Math.E), 0.000001)
     }
+
+    @Test
+    fun evaluate_multiple_parentheses_multiplication_isCorrect() {
+//        assertEquals(Evaluator.evaluateExpression("7(9(5))"), 7 * (9 * 5).toDouble(), 0.000001)
+//        assertEquals(Evaluator.evaluateExpression("((5)9)"), (9 * 5).toDouble(), 0.000001)
+//        assertEquals(Evaluator.evaluateExpression("7(9+e)+(3+1)3e(3+1)"), 7 * (9 + Math.E) + (3 + 1) * 3 * Math.E * 4, 0.000001)
+        assertEquals(Evaluator.evaluateExpression("(2)(5)"), 10.toDouble(), 0.000001)
+        assertEquals(Evaluator.evaluateExpression("(2+3)(5+9)"), (5 * 11).toDouble(), 0.000001)
+    }
 }
