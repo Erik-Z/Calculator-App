@@ -1,5 +1,10 @@
 package com.erikzhou.calculator.parser
 
+import kotlin.math.cos
+import kotlin.math.ln
+import kotlin.math.sin
+import kotlin.math.tan
+
 
 class PrattParser(private val tokens: List<Token>) {
     private var pos = 0
@@ -17,6 +22,15 @@ class PrattParser(private val tokens: List<Token>) {
                 val expr = parseExpression()
                 nextToken() // Consume ')'
                 expr
+            }
+            TokenType.CONSTANT -> {
+                Expr.Literal(evaluateConstant(token.value).toString())
+            }
+            TokenType.FUNCTION -> {
+                val functionName = token.value
+                val argument = parseExpression()
+                nextToken() // Consume ')'
+                Expr.FunctionCall(functionName, argument)
             }
             else -> throw IllegalArgumentException("Unexpected token: $token")
         }
@@ -67,7 +81,7 @@ fun tokenize(input: String): List<Token> {
                 while (i < input.length && (input[i].isDigit() || input[i] in ".eπ%")) {
                     i++
                 }
-                tokens.add(Token(TokenType.NUMBER, input.substring(start, i)))
+                tokens.add(Token(TokenType.CONSTANT, input.substring(start, i)))
             }
             in "+-*/^" -> {
                 tokens.add(Token(TokenType.OPERATOR, ch.toString()))
@@ -81,6 +95,14 @@ fun tokenize(input: String): List<Token> {
                 tokens.add(Token(TokenType.RPAREN, ch.toString()))
                 i++
             }
+            in 'a'..'z' -> {
+                // Tokenize function names
+                val start = i
+                while (i < input.length && input[i] in 'a'..'z') {
+                    i++
+                }
+                tokens.add(Token(TokenType.FUNCTION, input.substring(start, i)))
+            }
             else -> {
                 i++
             }
@@ -93,74 +115,74 @@ fun tokenize(input: String): List<Token> {
 sealed class Expr {
     data class Literal(val value: String) : Expr()
     data class Binary(val left: Expr, val operator: String, val right: Expr) : Expr()
+    data class FunctionCall(val functionName: String, val argument: Expr) : Expr()
+}
+
+fun evaluateConstant(constant: String): Double {
+    var value = 1.0
+    var current = ""
+    for (ch in constant) {
+        when (ch) {
+            'e' -> {
+                value *= if (current.isEmpty()) Math.E else current.toDouble() * Math.E
+                current = ""
+            }
+            'π' -> {
+                value *= if (current.isEmpty()) Math.PI else current.toDouble() * Math.PI
+                current = ""
+            }
+            '%' -> {
+                value *= if (current.isEmpty()) 0.01 else current.toDouble() * 0.01
+                current = ""
+            }
+            else -> current += ch
+        }
+    }
+    if (current.isNotEmpty()) {
+        value *= current.toDouble()
+    }
+    return value
 }
 
 fun handleImplicitMultiplication(tokens: List<Token>): List<Token> {
     val result = mutableListOf<Token>()
-    var recentLPARAMIndex = 0
+
     for (i in tokens.indices) {
-        if (tokens[i].type == TokenType.NUMBER) {
-            var j = 0
-            val token = tokens[i].value
-            while (j < token.length) {
-                when {
-                    token[j].isDigit() -> {
-                        val num = StringBuilder()
-                        while(j < token.length && (token[j].isDigit() || token[j] == '.')) {
-                            num.append(token[j])
-                            j++
-                        }
-                        result.add(Token(TokenType.NUMBER, num.toString()))
-                        result.add(Token(TokenType.OPERATOR, "*"))
-                    }
-                    token[j] in "eπ%" -> {
-                        result.add(Token(TokenType.CONSTANT, token[j].toString()))
-                        result.add(Token(TokenType.OPERATOR, "*"))
-                        j++
-                    }
-                }
-            }
-            result.removeLast()
-            result.add(Token(TokenType.RPAREN, ")"))
-            result.add(recentLPARAMIndex,Token(TokenType.LPAREN, "("))
-            if (i < tokens.size - 1) {
-                val next = tokens[i + 1]
-                if (next.type == TokenType.LPAREN) {
-                    result.add(Token(TokenType.OPERATOR, "*"))
-                }
-            }
-        } else {
-            result.add(tokens[i])
-            if (i < tokens.size - 1) {
-                val curr = tokens[i]
-                val next = tokens[i + 1]
-                if ((curr.type == TokenType.NUMBER || curr.type == TokenType.VARIABLE || curr.type == TokenType.RPAREN) &&
-                    (next.type == TokenType.NUMBER || next.type == TokenType.VARIABLE || next.type == TokenType.LPAREN)
-                ) {
-                    result.add(Token(TokenType.OPERATOR, "*"))
-                }
+        result.add(tokens[i])
+        if (i < tokens.size - 1) {
+            val curr = tokens[i]
+            val next = tokens[i + 1]
+            if ((curr.type == TokenType.NUMBER || curr.type == TokenType.VARIABLE || curr.type == TokenType.RPAREN) &&
+                (next.type == TokenType.NUMBER || next.type == TokenType.VARIABLE || next.type == TokenType.LPAREN || next.type == TokenType.FUNCTION)) {
+                result.add(Token(TokenType.OPERATOR, "*"))
             }
         }
-        recentLPARAMIndex = result.size
     }
 
     return result
 }
 
 fun preprocessConstants(tokens: List<Token>): List<Token> {
-    return tokens.map { token ->
+    val result = mutableListOf<Token>()
+    var currentConstant = ""
+
+    for (token in tokens) {
         if (token.type == TokenType.CONSTANT) {
-            val value = when {
-                token.value.contains("e") -> Math.E
-                token.value.contains("π") -> Math.PI
-                token.value.contains("%") -> 0.01
-                else -> throw IllegalArgumentException("Invalid Constant")
-            }
-            Token(TokenType.NUMBER, value.toString())
+            currentConstant += token.value
         } else {
-            token
+            if (currentConstant.isNotEmpty()) {
+                result.add(Token(TokenType.NUMBER, evaluateConstant(currentConstant).toString()))
+                currentConstant = ""
+            }
+            result.add(token)
         }
     }
+
+    if (currentConstant.isNotEmpty()) {
+        result.add(Token(TokenType.NUMBER, evaluateConstant(currentConstant).toString()))
+    }
+
+    return result
 }
 
 
@@ -178,6 +200,16 @@ fun evaluate(expr: Expr): Double {
                 "/" -> leftValue / rightValue
                 "^" -> Math.pow(leftValue, rightValue)
                 else -> throw IllegalArgumentException("Unknown operator: ${expr.operator}")
+            }
+        }
+        is Expr.FunctionCall -> {
+            val argumentValue = evaluate(expr.argument)
+            when (expr.functionName) {
+                "ln" -> ln(argumentValue)
+                "sin" -> sin(argumentValue)
+                "cos" -> cos(argumentValue)
+                "tan" -> tan(argumentValue)
+                else -> throw IllegalArgumentException("Unknown function: ${expr.functionName}")
             }
         }
     }
