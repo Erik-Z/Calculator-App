@@ -62,9 +62,9 @@ fun tokenize(input: String): List<Token> {
 
     while (i < input.length) {
         when (val ch = input[i]) {
-            in '0'..'9', 'e', 'π', '%' -> {
+            in '0'..'9', '.', 'e', 'π', '%' -> {
                 val start = i
-                while (i < input.length && (input[i].isDigit() || input[i] in "eπ%")) {
+                while (i < input.length && (input[i].isDigit() || input[i] in ".eπ%")) {
                     i++
                 }
                 tokens.add(Token(TokenType.NUMBER, input.substring(start, i)))
@@ -97,17 +97,51 @@ sealed class Expr {
 
 fun handleImplicitMultiplication(tokens: List<Token>): List<Token> {
     val result = mutableListOf<Token>()
-
+    var recentLPARAMIndex = 0
     for (i in tokens.indices) {
-        result.add(tokens[i])
-        if (i < tokens.size - 1) {
-            val curr = tokens[i]
-            val next = tokens[i + 1]
-            if ((curr.type == TokenType.NUMBER || curr.type == TokenType.VARIABLE || curr.type == TokenType.RPAREN) &&
-                (next.type == TokenType.NUMBER || next.type == TokenType.VARIABLE || next.type == TokenType.LPAREN)) {
-                result.add(Token(TokenType.OPERATOR, "*"))
+        if (tokens[i].type == TokenType.NUMBER) {
+            var j = 0
+            val token = tokens[i].value
+            while (j < token.length) {
+                when {
+                    token[j].isDigit() -> {
+                        val num = StringBuilder()
+                        while(j < token.length && (token[j].isDigit() || token[j] == '.')) {
+                            num.append(token[j])
+                            j++
+                        }
+                        result.add(Token(TokenType.NUMBER, num.toString()))
+                        result.add(Token(TokenType.OPERATOR, "*"))
+                    }
+                    token[j] in "eπ%" -> {
+                        result.add(Token(TokenType.CONSTANT, token[j].toString()))
+                        result.add(Token(TokenType.OPERATOR, "*"))
+                        j++
+                    }
+                }
+            }
+            result.removeLast()
+            result.add(Token(TokenType.RPAREN, ")"))
+            result.add(recentLPARAMIndex,Token(TokenType.LPAREN, "("))
+            if (i < tokens.size - 1) {
+                val next = tokens[i + 1]
+                if (next.type == TokenType.LPAREN) {
+                    result.add(Token(TokenType.OPERATOR, "*"))
+                }
+            }
+        } else {
+            result.add(tokens[i])
+            if (i < tokens.size - 1) {
+                val curr = tokens[i]
+                val next = tokens[i + 1]
+                if ((curr.type == TokenType.NUMBER || curr.type == TokenType.VARIABLE || curr.type == TokenType.RPAREN) &&
+                    (next.type == TokenType.NUMBER || next.type == TokenType.VARIABLE || next.type == TokenType.LPAREN)
+                ) {
+                    result.add(Token(TokenType.OPERATOR, "*"))
+                }
             }
         }
+        recentLPARAMIndex = result.size
     }
 
     return result
@@ -115,12 +149,12 @@ fun handleImplicitMultiplication(tokens: List<Token>): List<Token> {
 
 fun preprocessConstants(tokens: List<Token>): List<Token> {
     return tokens.map { token ->
-        if (token.type == TokenType.NUMBER) {
+        if (token.type == TokenType.CONSTANT) {
             val value = when {
-                token.value.contains("e") -> token.value.replace("e", "").toDouble() * Math.E
-                token.value.contains("π") -> token.value.replace("π", "").toDouble() * Math.PI
-                token.value.contains("%") -> token.value.replace("%", "").toDouble() * 0.01
-                else -> token.value.toDouble()
+                token.value.contains("e") -> Math.E
+                token.value.contains("π") -> Math.PI
+                token.value.contains("%") -> 0.01
+                else -> throw IllegalArgumentException("Invalid Constant")
             }
             Token(TokenType.NUMBER, value.toString())
         } else {
@@ -128,6 +162,7 @@ fun preprocessConstants(tokens: List<Token>): List<Token> {
         }
     }
 }
+
 
 
 fun evaluate(expr: Expr): Double {

@@ -2,6 +2,10 @@ package com.erikzhou.calculator
 
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import com.erikzhou.calculator.parser.PrattParser
+import com.erikzhou.calculator.parser.handleImplicitMultiplication
+import com.erikzhou.calculator.parser.preprocessConstants
+import com.erikzhou.calculator.parser.tokenize
 import kotlin.math.pow
 
 class CalculatorViewModel {
@@ -36,9 +40,16 @@ class CalculatorViewModel {
         }
     }
 
+    fun evaluateExpression(expression: String): Double{
+        val tokens = preprocessConstants(handleImplicitMultiplication(tokenize(expression)))
+        val parser = PrattParser(tokens)
+        val parsedExpression = parser.parseExpression()
+        return com.erikzhou.calculator.parser.evaluate(parsedExpression)
+    }
+
     fun evaluate() {
         try {
-            val formattedValue = formatRoundedValue(Evaluator.evaluateExpression(expression.value), 5)
+            val formattedValue = formatRoundedValue(evaluateExpression(expression.value), 5)
             expression.value = formattedValue
             numOfLeftParentheses.intValue = 0
         } catch (e: Exception) {
