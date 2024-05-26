@@ -2,6 +2,7 @@ package com.erikzhou.calculator
 
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.substring
 import com.erikzhou.calculator.parser.PrattParser
 import com.erikzhou.calculator.parser.handleImplicitMultiplication
 import com.erikzhou.calculator.parser.preprocessConstants
@@ -72,12 +73,21 @@ class CalculatorViewModel {
             expression.value += char
         }
         else if(char in "+*/") {
-            if (expression.value.isNotEmpty()) {
+            if (expression.value.length > 1){
+                val secondToLastChar = expression.value.substring(0..expression.value.length - 2).last()
                 val lastChar = expression.value.last()
-
-                if (lastChar in "+-*/") {
+                if (lastChar in "-" && secondToLastChar in "+*/") {
+                    expression.value = expression.value.dropLast(1)
+                    return
+                } else if (lastChar in "+*/-"){
                     expression.value = expression.value.dropLast(1)
                 }
+            } else if (expression.value.isNotEmpty()) {
+                val lastChar = expression.value.last()
+                if (lastChar in "-(") return
+
+            } else {
+                return
             }
             expression.value += char
         }
