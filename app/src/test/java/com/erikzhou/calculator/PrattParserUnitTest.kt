@@ -43,4 +43,11 @@ class PrattParserUnitTest {
         assertEquals(evaluateExpression("cos(5)tan(9)"), cos(5.0) * tan(9.0), 0.000001)
     }
 
+    fun PrattParser_NegativeNumbers_isCorrect() {
+        assertEquals(evaluateExpression("-8"), -8.0, 0.000001)
+        assertEquals(evaluateExpression("-8(10)"), -80.0, 0.000001)
+        assertEquals(evaluateExpression("-8(5 + 9)"), -104.0, 0.000001)
+        assertEquals(evaluateExpression("9-8"), 1.0, 0.000001)
+        assertEquals(evaluateExpression("13*-8"), -104.0, 0.000001)
+    }
 }
