@@ -2,6 +2,7 @@ package com.erikzhou.calculator.parser
 
 import kotlin.math.cos
 import kotlin.math.ln
+import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.tan
 
@@ -186,6 +187,44 @@ fun preprocessConstants(tokens: List<Token>): List<Token> {
 }
 
 
+//NULL, NUMBER, CONSTANT, OPERATOR, FUNCTION, LPAREN, RPAREN
+fun handleNegativeSign(tokens: List<Token>): List<Token>{
+    val result = mutableListOf<Token>()
+    var previousToken = Token(TokenType.NULL, "")
+    var isPreviousTokenNegative = false
+    for (token in tokens) {
+        if (token.type == TokenType.OPERATOR && token.value == "-") {
+            // Negative sign
+            if (previousToken.type == TokenType.NULL ||
+                previousToken.type == TokenType.OPERATOR ||
+                previousToken.type == TokenType.LPAREN
+            ){
+                // -1  negative NULL
+                // (-8)  negative LPARAM
+                // 5*-4  negative OPERATOR
+                // (5)-5  subtraction RPARAM
+                // 5-5 subtracton NUMBER
+                // e-5 subtraction CONSTANT
+                isPreviousTokenNegative = true
+            } else {
+                result.add(token)
+            }
+        } else if (token.type == TokenType.NUMBER || token.type == TokenType.CONSTANT){
+            if (isPreviousTokenNegative){
+                result.add(Token(TokenType.NUMBER, (token.value.toDouble() * -1).toString()))
+                isPreviousTokenNegative = false
+            } else {
+                result.add(token)
+            }
+        } else {
+            result.add(token)
+        }
+        previousToken = token
+
+    }
+    return result
+}
+
 
 fun evaluate(expr: Expr): Double {
     return when (expr) {
@@ -198,7 +237,7 @@ fun evaluate(expr: Expr): Double {
                 "-" -> leftValue - rightValue
                 "*" -> leftValue * rightValue
                 "/" -> leftValue / rightValue
-                "^" -> Math.pow(leftValue, rightValue)
+                "^" -> leftValue.pow(rightValue)
                 else -> throw IllegalArgumentException("Unknown operator: ${expr.operator}")
             }
         }
