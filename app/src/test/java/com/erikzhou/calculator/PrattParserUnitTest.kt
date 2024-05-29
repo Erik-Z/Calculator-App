@@ -3,6 +3,7 @@ package com.erikzhou.calculator
 import com.erikzhou.calculator.parser.PrattParser
 import com.erikzhou.calculator.parser.evaluate
 import com.erikzhou.calculator.parser.handleImplicitMultiplication
+import com.erikzhou.calculator.parser.handleNegativeSign
 import com.erikzhou.calculator.parser.preprocessConstants
 import com.erikzhou.calculator.parser.tokenize
 import org.junit.Test
@@ -17,7 +18,9 @@ import kotlin.math.tan
 class PrattParserUnitTest {
 
     fun evaluateExpression(expression: String): Double{
-        val tokens = handleImplicitMultiplication(preprocessConstants(tokenize(expression)))
+        val preprocessConstantsTokens = preprocessConstants(tokenize(expression))
+        val handleImplicitMultiplicationTokens = handleImplicitMultiplication(preprocessConstantsTokens)
+        val tokens = handleNegativeSign(handleImplicitMultiplicationTokens)
         val parser = PrattParser(tokens)
         val parsedExpression = parser.parseExpression()
         return evaluate(parsedExpression)
@@ -43,10 +46,11 @@ class PrattParserUnitTest {
         assertEquals(evaluateExpression("cos(5)tan(9)"), cos(5.0) * tan(9.0), 0.000001)
     }
 
+    @Test
     fun PrattParser_NegativeNumbers_isCorrect() {
         assertEquals(evaluateExpression("-8"), -8.0, 0.000001)
         assertEquals(evaluateExpression("-8(10)"), -80.0, 0.000001)
-        assertEquals(evaluateExpression("-8(5 + 9)"), -104.0, 0.000001)
+        assertEquals(evaluateExpression("-8(5 + 9)"), -112.0, 0.000001)
         assertEquals(evaluateExpression("9-8"), 1.0, 0.000001)
         assertEquals(evaluateExpression("13*-8"), -104.0, 0.000001)
     }
