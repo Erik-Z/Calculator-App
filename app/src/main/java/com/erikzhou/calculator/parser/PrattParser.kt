@@ -24,9 +24,7 @@ class PrattParser(private val tokens: List<Token>) {
                 nextToken() // Consume ')'
                 expr
             }
-            TokenType.CONSTANT -> {
-                Expr.Literal(evaluateConstant(token.value).toString())
-            }
+            // There should not be a CONSTANT type due to preprocessConstants
             TokenType.FUNCTION -> {
                 val functionName = token.value
                 val argument = parseExpression()
